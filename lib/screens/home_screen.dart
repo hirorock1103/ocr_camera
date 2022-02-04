@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:io' as io;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -9,6 +12,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final picker = ImagePicker();
   String msg = "ここに画像がセットされます";
+  late File _image;
 
   @override
   Widget build(BuildContext context) {
@@ -21,25 +25,56 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ElevatedButton(
-                onPressed: ()  {
-                  //カメラ起動して撮影→撮影後画像補正画面となる
-                  // var pickedFile =
-                  //     await picker.pickImage(source: ImageSource.camera);
-                  setState(() {
-                    msg = "撮影画像表示中";
-                  });
-                },
-                child: Text("カメラ起動")),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                    onPressed: () async {
+                      //カメラ起動して撮影→撮影後画像補正画面となる
+                      getImageFromCamera();
+                    },
+                    child: Text("カメラ起動")),
+                ElevatedButton(
+                    onPressed: () async {
+                      //カメラ起動して撮影→撮影後画像補正画面となる
+                      getImageFromGallery();
+                    },
+                    child: Text("ギャラリー選択")),
+              ],
+            ),
             Text(msg),
             Expanded(
                 child: Container(
               decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-              child: Center(child: Text("撮影画像を表示")),
-            ))
+              child: _image == null
+                  ? Center(child: Text("撮影画像を表示"))
+                  : Image.file(_image),
+            )),
+            ElevatedButton(
+                onPressed: () {
+                  //OCR送信 apiで通信をする
+
+
+                },
+                child: Text("OCR"))
           ],
         ),
       ),
     );
+  }
+
+  Future getImageFromCamera() async {
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    msg = "撮影画像表示中";
+    setState(() {
+      _image = File(pickedFile!.path);
+    });
+  }
+
+  Future getImageFromGallery() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    setState(() {
+      _image = File(pickedFile!.path);
+    });
   }
 }
