@@ -2,7 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ocr_camera/models/model/news_item.dart';
 import 'dart:io' as io;
+
+import 'package:ocr_camera/models/viewmodels/news_list_viewmodel.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -12,7 +15,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final picker = ImagePicker();
   String msg = "ここに画像がセットされます";
-  late File _image;
+  late File _image ;
+  //NewsListViewModel viewModel = NewsListViewModel();
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +55,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   : Image.file(_image),
             )),
             ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   //OCR送信 apiで通信をする
+
+                   //List<NewsItem> list =  await viewModel.getNews();
+                  // list.forEach((element) {
+                  // });
+                  setState(() {
+
+                  });
+
 
 
                 },
